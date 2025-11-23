@@ -1,11 +1,11 @@
-#ifndef CLIINTERFACE_H
-#define CLIINTERFACE_H
+#pragma once
+#ifndef CLI_H
+#define CLI_H
 
+#include "DataStructures.h"
 #include <string>
-#include "CourseManager.h"
-#include "PeopleManager.h"
-#include "Relations.h"
-#include "CustomMap.h"
+
+using namespace std;
 
 class CLIInterface {
 private:
@@ -14,15 +14,16 @@ private:
     Relations& rel;
     CustomMap<int, int>& courseToFaculty;
     CustomMap<int, int>& courseToRoom;
+    CustomMap<int, int> facultyToRoom;
 
 public:
     CLIInterface(CourseManager& c, PeopleManager& p, Relations& r,
         CustomMap<int, int>& cf, CustomMap<int, int>& cr);
-
     void showWelcome();
     void displayStatistics();
     void quickSetup();
-    void exportData(const std::string& filename);
+    CustomMap<int, int>& getFacultyToRoom();
+    void exportData(const string& filename);
     void showHelp();
 };
 

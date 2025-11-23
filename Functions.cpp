@@ -1,48 +1,158 @@
-#include <iostream>
 #include "Functions.h"
-#include "CourseManager.h"
-#include "PeopleManager.h"
-#include "CustomMap.h"
-#include "DisplayHelper.h"
+#include <iostream>
 
 using namespace std;
 
-int main() {
-    DisplayHelper::printHeader("MODULE 7: FUNCTION PROPERTIES");
+bool Functions::isInjective(const CustomMap<int, int>& f) {
+    CustomSet<int> values;
+    for (const auto& pair : f) {
+        if (values.contains(pair.second)) return false;
+        values.insert(pair.second);
+    }
+    return true;
+}
 
-    CourseManager cm;
-    PeopleManager pm;
-    CustomMap<int, int> courseToFaculty;
+bool Functions::isSurjective(const CustomMap<int, int>& f, int codomainSize) {
+    CustomSet<int> values;
+    for (const auto& pair : f) {
+        values.insert(pair.second);
+    }
+    return values.size() == codomainSize;
+}
 
-    cm.addCourse("CS101", "Programming", 3);
-    cm.addCourse("CS102", "DataStructures", 4);
-    cm.addCourse("CS201", "Algorithms", 4);
-    cm.addCourse("MATH101", "Calculus", 3);
+bool Functions::isBijective(const CustomMap<int, int>& f, int codomainSize) {
+    return isInjective(f) && isSurjective(f, codomainSize);
+}
 
-    pm.addFaculty("Sir Raza");
-    pm.addFaculty("Sir Qamar");
-    pm.addFaculty("Sir Fayyaz");
+CustomMap<int, int> Functions::compose(const CustomMap<int, int>& f, const CustomMap<int, int>& g) {
+    CustomMap<int, int> result;
+    for (const auto& pair : f) {
+        const int* gval = g.get(pair.second);
+        if (gval) {
+            result.insert(pair.first, *gval);
+        }
+    }
+    return result;
+}
 
-    courseToFaculty.insert(0, 0);
-    courseToFaculty.insert(1, 0);
-    courseToFaculty.insert(2, 1);
-    courseToFaculty.insert(3, 2);
+CustomMap<int, int> Functions::inverse(const CustomMap<int, int>& f, int codomainSize) {
+    CustomMap<int, int> inv;
 
-    Functions::display(courseToFaculty, cm, pm);
-
-    cout << "\nTesting Function Composition:\n";
-    CustomMap<int, int> facultyToRoom;
-    facultyToRoom.insert(0, 10);
-    facultyToRoom.insert(1, 20);
-    facultyToRoom.insert(2, 30);
-
-    auto composed = Functions::compose(courseToFaculty, facultyToRoom);
-    cout << "Course -> Room (composed):\n";
-    for (const auto& pair : composed) {
-        const auto* c = cm.getCourse(pair.first);
-        cout << "  " << (c ? c->code : to_string(pair.first))
-            << " -> Room " << pair.second << "\n";
+    if (!isBijective(f, codomainSize)) {
+        DisplayHelper::printError("Cannot create inverse - function must be bijective");
+        return inv;
     }
 
-    return 0;
+    for (const auto& pair : f) {
+        inv.insert(pair.second, pair.first);
+    }
+
+    DisplayHelper::printSuccess("Inverse function created");
+    return inv;
+}
+
+bool Functions::verifyInverse(const CustomMap<int, int>& f, const CustomMap<int, int>& f_inv) {
+    for (const auto& pair : f) {
+        const int* inv_val = f_inv.get(pair.second);
+        if (!inv_val || *inv_val != pair.first) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void Functions::analyzeStudentCourses(PeopleManager& pm, const CourseManager& cm) {
+    DisplayHelper::printHeader("STUDENT COURSE MAPPING");
+
+    cout << "\nStudent Enrollments:\n";
+    cout << "Total Students: " << pm.getStudentCount() << "\n\n";
+
+    for (int i = 0; i < pm.getStudentCount(); i++) {
+        auto* student = pm.getStudent(i);
+        if (student) {
+            cout << "  " << student->name << " -> {";
+            for (size_t j = 0; j < student->enrolled.size(); j++) {
+                auto* course = cm.getCourse(student->enrolled[j]);
+                cout << (course ? course->code : to_string(student->enrolled[j]));
+                if (j < student->enrolled.size() - 1) cout << ", ";
+            }
+            cout << "} (" << student->enrolled.size() << " courses)\n";
+        }
+    }
+    cout << "\n";
+}
+
+void Functions::analyzeFacultyRooms(const CustomMap<int, int>& facultyToRoom, PeopleManager& pm) {
+    DisplayHelper::printHeader("FACULTY ROOM ASSIGNMENT");
+
+    cout << "\nFaculty-Room Mapping:\n";
+    cout << "Total Assignments: " << facultyToRoom.size() << "\n";
+    cout << "Available Rooms: " << pm.getRoomCount() << "\n\n";
+
+    bool inj = isInjective(facultyToRoom);
+    bool sur = isSurjective(facultyToRoom, pm.getRoomCount());
+
+    cout << "Properties:\n";
+    cout << "  Injective: " << (inj ? "Yes - Each faculty has unique room" : "No - Some rooms shared") << "\n";
+    cout << "  Surjective: " << (sur ? "Yes - All rooms utilized" : "No - Some rooms unused") << "\n\n";
+
+    cout << "Assignments:\n";
+    for (const auto& pair : facultyToRoom) {
+        auto* faculty = pm.getFaculty(pair.first);
+        auto* room = pm.getRoom(pair.second);
+        cout << "  " << (faculty ? faculty->name : to_string(pair.first))
+            << " -> " << (room ? room->name : to_string(pair.second)) << "\n";
+    }
+    cout << "\n";
+}
+
+vector<CustomSet<int>> Functions::powerSet(const CustomSet<int>& s) {
+    vector<CustomSet<int>> result;
+    result.push_back(CustomSet<int>());
+
+    for (const auto& elem : s.getVector()) {
+        int currentSize = result.size();
+        for (int i = 0; i < currentSize; i++) {
+            CustomSet<int> newSet = result[i];
+            newSet.insert(elem);
+            result.push_back(newSet);
+        }
+    }
+    return result;
+}
+
+vector<pair<int, int>> Functions::cartesianProduct(const CustomSet<int>& a, const CustomSet<int>& b) {
+    vector<pair<int, int>> result;
+    for (const auto& x : a.getVector()) {
+        for (const auto& y : b.getVector()) {
+            result.push_back(make_pair(x, y));
+        }
+    }
+    return result;
+}
+
+void Functions::display(const CustomMap<int, int>& courseToFaculty, const CourseManager& cm, PeopleManager& pm) {
+    DisplayHelper::printHeader("FUNCTION ANALYSIS");
+
+    cout << "\nCourse-Faculty Mapping:\n";
+    cout << "Courses Mapped: " << courseToFaculty.size() << "\n";
+    cout << "Total Faculty: " << pm.getFacultyCount() << "\n\n";
+
+    bool inj = isInjective(courseToFaculty);
+    bool sur = isSurjective(courseToFaculty, pm.getFacultyCount());
+    bool bij = isBijective(courseToFaculty, pm.getFacultyCount());
+
+    cout << "Properties:\n";
+    cout << "  Injective: " << (inj ? "Yes" : "No") << "\n";
+    cout << "  Surjective: " << (sur ? "Yes" : "No") << "\n";
+    cout << "  Bijective: " << (bij ? "Yes" : "No") << "\n\n";
+
+    cout << "Mappings:\n";
+    for (const auto& pair : courseToFaculty) {
+        const auto* course = cm.getCourse(pair.first);
+        auto* faculty = pm.getFaculty(pair.second);
+        cout << "  " << (course ? course->code : to_string(pair.first)) << " -> "
+            << (faculty ? faculty->name : to_string(pair.second)) << "\n";
+    }
+    cout << "\n";
 }

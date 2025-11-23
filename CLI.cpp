@@ -1,5 +1,4 @@
-#include "CLIInterface.h"
-#include "DisplayHelper.h"
+#include "CLI.h"
 #include <iostream>
 #include <fstream>
 
@@ -11,15 +10,9 @@ CLIInterface::CLIInterface(CourseManager& c, PeopleManager& p, Relations& r,
 }
 
 void CLIInterface::showWelcome() {
-    DisplayHelper::printHeader("FAST UNIVERSITY MANAGEMENT SYSTEM");
-    cout << "\n  Welcome to the Advanced University Management System\n";
-    cout << "  Powered by Discrete Mathematics Concepts\n";
-    cout << "\n  Available Modules:\n";
-    cout << "  - Functions & Mappings\n";
-    cout << "  - Automated Proof Generation\n";
-    cout << "  - Consistency Checking\n";
-    cout << "  - Performance Benchmarking\n";
-    cout << "  - Comprehensive Unit Testing\n\n";
+    DisplayHelper::printHeader("MHM MANAGEMENT SYSTEM");
+    cout << "\n  University Management System\n";
+    cout << "  Comprehensive Course & Resource Management\n\n";
 }
 
 void CLIInterface::displayStatistics() {
@@ -42,6 +35,7 @@ void CLIInterface::displayStatistics() {
     cout << "\nAssignments:\n";
     cout << "  Course-Faculty: " << courseToFaculty.size() << " mappings\n";
     cout << "  Course-Room:    " << courseToRoom.size() << " mappings\n";
+    cout << "  Faculty-Room:   " << facultyToRoom.size() << " mappings\n";
 
     int totalEnrollments = 0;
     for (int i = 0; i < pm.getStudentCount(); i++) {
@@ -53,7 +47,7 @@ void CLIInterface::displayStatistics() {
 }
 
 void CLIInterface::quickSetup() {
-    DisplayHelper::printHeader("QUICK SETUP WIZARD");
+    DisplayHelper::printHeader("QUICK SETUP");
 
     cout << "\nThis will create sample data for testing.\n";
     cout << "Continue? (y/n): ";
@@ -73,13 +67,13 @@ void CLIInterface::quickSetup() {
     rel.addPrereq(1, 2);
 
     cout << "Creating sample students...\n";
-    pm.addStudent("Noor");
-    pm.addStudent("Khadija");
+    pm.addStudent("Ali");
     pm.addStudent("Nimra");
+    pm.addStudent("Maria");
 
     cout << "Creating sample faculty...\n";
-    pm.addFaculty("Sir Raza");
-    pm.addFaculty("Sir Qamar");
+    pm.addFaculty("Dr. Kashaf");
+    pm.addFaculty("Dr. Noor");
 
     cout << "Creating sample rooms...\n";
     pm.addRoom("R101", 50);
@@ -95,6 +89,9 @@ void CLIInterface::quickSetup() {
     courseToRoom.insert(1, 0);
     courseToRoom.insert(2, 1);
     courseToRoom.insert(3, 1);
+
+    facultyToRoom.insert(0, 0);
+    facultyToRoom.insert(1, 1);
 
     cout << "Enrolling students...\n";
     auto* s1 = pm.getStudent(0);
@@ -113,6 +110,10 @@ void CLIInterface::quickSetup() {
     displayStatistics();
 }
 
+CustomMap<int, int>& CLIInterface::getFacultyToRoom() {
+    return facultyToRoom;
+}
+
 void CLIInterface::exportData(const string& filename) {
     ofstream file(filename);
     if (!file.is_open()) {
@@ -120,7 +121,7 @@ void CLIInterface::exportData(const string& filename) {
         return;
     }
 
-    file << "FAST UNIVERSITY DATA EXPORT\n";
+    file << "MHM DATA EXPORT\n";
     file << "===========================\n\n";
 
     file << "COURSES:\n";
@@ -151,27 +152,23 @@ void CLIInterface::exportData(const string& filename) {
 void CLIInterface::showHelp() {
     DisplayHelper::printHeader("HELP & DOCUMENTATION");
 
-    cout << "\nMODULE 7 - Functions:\n";
-    cout << "  Tests function properties (injective, surjective, bijective)\n";
-    cout << "  Example: Course->Faculty mapping analysis\n";
+    cout << "\nFunctions:\n";
+    cout << "  Tests function properties and mappings\n";
+    cout << "  Supports inverse functions\n";
 
-    cout << "\nMODULE 8 - Automated Proofs:\n";
-    cout << "  Generates formal mathematical proofs\n";
-    cout << "  Example: Prerequisite verification using induction\n";
+    cout << "\nProof Generator:\n";
+    cout << "  Generates formal proofs\n";
+    cout << "  Supports prerequisite verification\n";
 
-    cout << "\nMODULE 9 - Consistency Checker:\n";
-    cout << "  Detects system-wide conflicts and violations\n";
-    cout << "  Checks: cycles, prerequisites, capacity, assignments\n";
+    cout << "\nConsistency Checker:\n";
+    cout << "  Detects system-wide conflicts\n";
+    cout << "  Uses set operations\n";
 
-    cout << "\nMODULE 10 - Performance:\n";
+    cout << "\nPerformance:\n";
     cout << "  Benchmarks algorithm efficiency\n";
-    cout << "  Tests: transitive closure, function checks, etc.\n";
+    cout << "  Tests memoization\n";
 
-    cout << "\nMODULE 11 - CLI (Current):\n";
-    cout << "  Text-based interactive interface\n";
-    cout << "  Features: quick setup, export, statistics\n";
-
-    cout << "\nMODULE 12 - Unit Testing:\n";
-    cout << "  Comprehensive automated test suite\n";
-    cout << "  Validates all discrete structure operations\n\n";
+    cout << "\nUnit Testing:\n";
+    cout << "  Comprehensive test suite\n";
+    cout << "  Large-scale testing\n\n";
 }
