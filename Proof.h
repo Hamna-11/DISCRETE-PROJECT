@@ -1,34 +1,27 @@
-#pragma once
-#ifndef PROOF_H
-#define PROOF_H
+#ifndef PROOFGENERATOR_H
+#define PROOFGENERATOR_H
 
-#include "DataStructures.h"
-#include <vector>
 #include <string>
-
-using namespace std;
+#include <vector>
+#include "Relations.h"
+#include "CourseManager.h"
 
 class ProofGenerator {
 private:
-    const Relations& relations;
-    const CourseManager& cm;
-
     struct ProofStep {
-        string statement;
-        string justification;
+        std::string statement;
+        std::string justification;
         int level;
     };
 
-    vector<ProofStep> proofSteps;
+    const Relations& relations;
+    const CourseManager& cm;
+    std::vector<ProofStep> proofSteps;
 
 public:
     ProofGenerator(const Relations& r, const CourseManager& c);
-    void generatePrereqProof(int courseId, const vector<bool>& completed);
-    void generateCourseChainProof(int studentId, PeopleManager& pm);
-    void generateAcyclicProof();
-    void generateEquivalenceProof(const vector<vector<bool>>& relation);
-    void generatePartitionProof(const vector<CustomSet<int>>& partition);
-    void generatePigeonholeProof(int pigeons, int holes);
+    void generatePrereqProof(int courseId, const std::vector<bool>& completed);
+    void generateEquivalenceProof(const std::vector<std::vector<bool>>& relation);
     void display() const;
 };
 
