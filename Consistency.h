@@ -1,12 +1,13 @@
 #pragma once
-#ifndef CONSISTENCY_H
-#define CONSISTENCY_H
+#ifndef CONSISTENCYCHECKER_H
+#define CONSISTENCYCHECKER_H
 
-#include "DataStructures.h"
-#include <vector>
 #include <string>
-
-using namespace std;
+#include <vector>
+#include "CourseManager.h"
+#include "PeopleManager.h"
+#include "Relations.h"
+#include "CustomMap.h"
 
 class ConsistencyChecker {
 private:
@@ -16,12 +17,13 @@ private:
     CustomMap<int, int>& courseToFaculty;
     CustomMap<int, int>& courseToRoom;
 
-    vector<string> errors;
-    vector<string> warnings;
+    std::vector<std::string> errors;
+    std::vector<std::string> warnings;
 
 public:
     ConsistencyChecker(const CourseManager& c, PeopleManager& p,
         const Relations& r, CustomMap<int, int>& cf, CustomMap<int, int>& cr);
+
     void runAllChecks();
     void checkPrereqCycles();
     void checkStudentPrereqs();
@@ -29,9 +31,6 @@ public:
     void checkFacultyConflicts();
     void checkRoomCapacity();
     void checkUnassignedCourses();
-    void checkCourseOverlaps();
-    void checkScheduleConflicts();
-    CustomSet<int> getCourseStudents(int courseId) const;
     void displayReport() const;
 };
 
