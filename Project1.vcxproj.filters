@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CourseManager.h">
+    <ClInclude Include="CourseScheduler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PeopleManager.h">
+    <ClInclude Include="GroupManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InductionModule.h">
+    <ClInclude Include="InductionVerifier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LogicEngine.h">
@@ -35,19 +35,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CourseManager.cpp">
+    <ClCompile Include="CourseScheduler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PeopleManager.cpp">
+    <ClCompile Include="GroupManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InductionModule.cpp">
+    <ClCompile Include="InductionVerifier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LogicEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SetOperations.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RelationsModule.cpp">

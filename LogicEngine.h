@@ -1,31 +1,33 @@
 #ifndef LOGICENGINE_H
 #define LOGICENGINE_H
 
-#include "CourseManager.h"
-#include <iostream>
 #include <vector>
 #include <string>
-#include <iomanip>
-#include <algorithm>
+#include "Models.h"
+
+using namespace std;
 
 class LogicEngine {
-public:
-    struct Rule {
-        std::string name;
-        std::vector<int> antecedent;
-        std::vector<int> consequent;
-        std::string description;
-    };
 private:
-    std::vector<Rule> rules;
-    CustomMap<std::string, bool> facts;
+    vector<LogicRule> rules;
+    vector<string> facts;
+
+    bool hasFact(const string& fact) const;
+
 public:
-    void addRule(const std::string&, const std::vector<int>&, const std::vector<int>&, const std::string&);
-    void addFact(const std::string&, bool value = true);
-    bool checkRule(const Rule&) const;
-    std::vector<std::string> inferConsequences();
-    void displayRules() const;
-    void displayFacts() const;
+    void addRule(const string& premise, const string& conclusion);
+    void addFact(const string& fact);
+    bool infer(const string& query);
+    vector<string> getAllFacts() const;
+    vector<LogicRule> getRules() const;
+    void setRules(const vector<LogicRule>& r);
+    vector<string> detectConflicts();
+    bool isTautology(const string& formula);
+    void display();
+    void addRuleInteractive();
+    void addFactInteractive();
+    void performInference();
+    void checkTautology();
 };
 
 #endif#pragma once

@@ -123,21 +123,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CourseManager.h" />
-    <ClInclude Include="InductionModule.h" />
+    <ClInclude Include="CourseScheduler.h" />
+    <ClInclude Include="InductionVerifier.h" />
     <ClInclude Include="LogicEngine.h" />
-    <ClInclude Include="PeopleManager.h" />
+    <ClInclude Include="GroupManager.h" />
     <ClInclude Include="RelationsModule.h" />
     <ClInclude Include="SetOperations.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CourseManager.cpp" />
-    <ClCompile Include="InductionModule.cpp" />
+    <ClCompile Include="CourseScheduler.cpp" />
+    <ClCompile Include="InductionVerifier.cpp" />
     <ClCompile Include="LogicEngine.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PeopleManager.cpp" />
+    <ClCompile Include="GroupManager.cpp" />
     <ClCompile Include="RelationsModule.cpp" />
-    <ClCompile Include="SetOperations.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
